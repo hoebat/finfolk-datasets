@@ -20,3 +20,7 @@ To update data, commit and push the LFS object in the data repository, update th
 - `GET /health` — deployed source commit.
 
 Public API supports cross-origin GET/HEAD from finfolk.com.au. Writes return 405; `/admin` returns 404. No numeric depth sampling is claimed. The main production map has not been switched to this API.
+
+## FinFolk design system
+
+The catalogue uses FinFolk's five-section product navigation, desktop rail and mobile bottom navigation. State collections sit within the data library. Theme definitions and SVG identity are copied from `hoebat/finfolk-next` commit `d879835e9493564c95b617187c84ee2478abecdd` (`src/appearance.js`, `src/finfolk-{wordmark,mark,icon}.svg` in the web-main package). Preserve their provenance when refreshing them. The four themes use the same `finfolk-theme` preference key; browser storage remains separate for each hostname.

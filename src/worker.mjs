@@ -14,6 +14,6 @@ if(path==='/v1/catalogue'){let datasets=catalogue.datasets;const state=url.searc
 if(path.startsWith('/v1/datasets/')){let id;try{id=decodeURIComponent(path.slice('/v1/datasets/'.length));}catch{return json({error:'Invalid dataset identifier'},400);}const record=catalogue.datasets.find(r=>r.id===id);return record?json({schemaVersion:1,release:catalogue.release,dataset:record}):json({error:'Dataset not found'},404);}
 if(path.startsWith('/v1/')||path==='/admin'||path.startsWith('/admin/')){h['Cache-Control']='no-store';return json({error:path.startsWith('/admin')?'Administration is not enabled on this public service.':'Not found'},404);}
 const key=path==='/'?'/':path;
-if(Object.hasOwn(files,key)){h['Content-Security-Policy']=csp;return respond(files[key],200,key.endsWith('.js')?'text/javascript; charset=utf-8':key.endsWith('.css')?'text/css; charset=utf-8':'text/html; charset=utf-8');}
+if(Object.hasOwn(files,key)){h['Content-Security-Policy']=csp;return respond(files[key],200,key.endsWith('.svg')?'image/svg+xml':key.endsWith('.js')?'text/javascript; charset=utf-8':key.endsWith('.css')?'text/css; charset=utf-8':'text/html; charset=utf-8');}
 return json({error:'Not found'},404);
 }};

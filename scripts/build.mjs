@@ -11,7 +11,7 @@ if(createHash('sha256').update(raw).digest('hex')!==release.sha256)throw Error('
 const source=JSON.parse(raw);
 const datasets=source.datasets.filter(r=>r.publication==='published').map(r=>({...r,assets:r.assets.filter(a=>a.status==='published'),pending:[]}));
 const catalogue={schemaVersion:1,snapshotAt:source.snapshotAt,states:source.states,regions:source.regions,datasets,release,notes:'Versioned catalogue snapshot. Product files retain their published delivery URLs. Contours are display layers, not numeric depth grids.'};
-const files=Object.fromEntries(['index.html','styles.css','app.js'].map(n=>['/'+(n==='index.html'?'':n),readFileSync('src/'+n,'utf8')]));
+const files=Object.fromEntries(['index.html','styles.css','app.js','appearance.js','finfolk-wordmark.svg','finfolk-mark.svg','finfolk-icon.svg'].map(n=>['/'+(n==='index.html'?'':n),readFileSync('src/'+n,'utf8')]));
 const server=readFileSync('src/worker.mjs','utf8').replace('/* RELEASE_DATA */',`const catalogue=${JSON.stringify(catalogue)};\nconst files=${JSON.stringify(files)};`);
 mkdirSync('dist/server',{recursive:true});writeFileSync('dist/server/index.js',server);
 console.log(JSON.stringify({datasets:datasets.length,sourceCommit:release.commit,lfsSha256:release.sha256,workerBytes:Buffer.byteLength(server)}));
