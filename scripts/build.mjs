@@ -1,0 +1,17 @@
+import { readFileSync,writeFileSync,mkdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { resolve } from 'node:path';
+const release=JSON.parse(readFileSync('data-release.json','utf8'));
+const checkout=resolve(process.argv[2]||'../finfolk-atelier');
+const pointer=execFileSync('git',['-C',checkout,'show',release.commit+':'+release.path],{encoding:'utf8'});
+if(!pointer.startsWith('version https://git-lfs.github.com/spec/v1\n')||!pointer.includes('oid sha256:'+release.sha256+'\n'))throw Error('Pinned source is not the expected Git LFS object');
+const raw=readFileSync(resolve(checkout,release.path));
+if(createHash('sha256').update(raw).digest('hex')!==release.sha256)throw Error('Materialized source does not match release hash. Run git lfs pull at the pinned revision.');
+const source=JSON.parse(raw);
+const datasets=source.datasets.filter(r=>r.publication==='published').map(r=>({...r,assets:r.assets.filter(a=>a.status==='published'),pending:[]}));
+const catalogue={schemaVersion:1,snapshotAt:source.snapshotAt,states:source.states,regions:source.regions,datasets,release,notes:'Versioned catalogue snapshot. Product files retain their published delivery URLs. Contours are display layers, not numeric depth grids.'};
+const files=Object.fromEntries(['index.html','styles.css','app.js'].map(n=>['/'+(n==='index.html'?'':n),readFileSync('src/'+n,'utf8')]));
+const server=readFileSync('src/worker.mjs','utf8').replace('/* RELEASE_DATA */',`const catalogue=${JSON.stringify(catalogue)};\nconst files=${JSON.stringify(files)};`);
+mkdirSync('dist/server',{recursive:true});writeFileSync('dist/server/index.js',server);
+console.log(JSON.stringify({datasets:datasets.length,sourceCommit:release.commit,lfsSha256:release.sha256,workerBytes:Buffer.byteLength(server)}));
