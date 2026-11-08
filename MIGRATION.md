@@ -18,3 +18,5 @@ Netlify project created: `2994a09f-11bc-40e1-8a3a-d3e3a91455ff`, stable hostname
 ## Verification
 
 Next.js 16.4.5 production compilation and strict TypeScript checks passed on Goloka in an isolated build directory. Five public API/schema tests passed. HTTP smoke checks passed for the public pages/API and fail-closed unconfigured auth/admin endpoints. The Neon SDK dependency tree required patched Better Auth 1.7.18 and Zod 4.6.7 overrides; production audit has no high or critical findings (seven low findings remain in transitive email-rendering dependencies). Live sign-in, GitHub App writes, concurrent editor acceptance and deployment cutover remain unverified until operator configuration is available.
+
+The migration initially lacked local LFS clean-filter setup; a follow-up commit replaces the catalogue with its LFS pointer and adds a committed-pointer build gate. Squash the migration PR when eventually merging so main receives the LFS representation directly. Operator settings remain to be confirmed; the connector returned 403 for environment writes.
