@@ -24,7 +24,7 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "netlify-cli": "^27.16.2",
+    "netlify-cli": "27.16.2",
     "typescript": "^5.9.0"
   },
   "overrides": {
