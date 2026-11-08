@@ -16,11 +16,12 @@ The development checkout is `/Users/zcaudate/Development/greenways/finfolk-datas
 cd /Users/zcaudate/Development/greenways
 git clone git@github.com:hoebat/finfolk-datasets.git
 cd finfolk-datasets
+npm ci
 npm run setup
 npm run dev
 ```
 
-Prerequisites: Node 22+, Git and Git LFS. No npm dependency install is required. `npm run setup` fetches the pinned catalogue's Git metadata and materializes only its Git LFS object into ignored `.cache/catalogue-source`, validates its size/checksum, builds and runs the service tests. The current catalogue is 294,850 bytes; bulk ocean surveys are not fetched. Existing main application and Atelier checkouts are not modified.
+Prerequisites: Node 22+, Git and Git LFS. Run `npm ci` to install the locked Next.js dependencies. `npm run setup` materializes the local `data/catalogue.json` LFS object and builds Next.js. Run `npm test` separately. The current catalogue is 294,850 bytes; bulk ocean surveys are not fetched. Existing main application and Atelier checkouts are not modified.
 
 Local preview is loopback-only at `http://127.0.0.1:8786`. To open it from the originating Mac while it runs on Goloka:
 
@@ -32,4 +33,4 @@ Then visit `http://127.0.0.1:8786` locally. Choose another local forwarding port
 
 After pulling later changes, run `npm run setup` again if `data-release.json` changes. Run `npm run build` and `npm test` for ordinary code changes.
 
-Production remains on Sites at https://datasets.finfolk.com.au. Pushing GitHub source or running setup does not deploy it. Read `HANDOFF.md` and the Sites skill before publishing. Source data remains authoritative in Git LFS; checked-out caches and deployment bundles are reproducible copies.
+Production remains on Sites at https://datasets.finfolk.com.au until the Netlify migration acceptance gates in `MIGRATION.md` pass. Pushing GitHub source or running setup does not deploy it. Read `HANDOFF.md` and the Sites skill before publishing. Source data remains authoritative in Git LFS; checked-out caches and deployment bundles are reproducible copies.

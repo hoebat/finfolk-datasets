@@ -1,5 +1,7 @@
 # FinFolk datasets agent handoff
 
+**Current work:** the Next.js migration is on `migration/nextjs-netlify`. See `MIGRATION.md` for its configuration gates. The historical production details below describe the still-live Sites release; do not cut over DNS before live auth and Git/LFS acceptance.
+
 Updated 8 November 2026, Australia/Melbourne.
 
 The dataset catalogue is live at https://datasets.finfolk.com.au. Its public interface and read-only API are deployed. Git-backed administration and connecting the production map to this service remain unfinished. The latest user request is to hand this work to the next agent.

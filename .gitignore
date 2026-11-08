@@ -2,3 +2,9 @@ dist/
 .cache/
 .env*
 node_modules/
+.next/
+.netlify/
+.generated/
+next-env.d.ts
+*.tsbuildinfo
+!.env.example
