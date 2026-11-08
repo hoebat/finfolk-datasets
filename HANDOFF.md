@@ -18,7 +18,7 @@ Workspace: `/Users/chris/Development/greenways`.
 
 | Checkout | Purpose | Current relevant state |
 | --- | --- | --- |
-| `finfolk-datasets` | New production catalogue service | Sites-managed Git repository; deployed source commit `5029d6da23a0f2aa125c1bc99c9bfedac443e1f4` |
+| `finfolk-datasets` | New production catalogue service | GitHub `hoebat/finfolk-datasets` (`origin/main`), with a separate `sites` publishing remote; deployed source commit `5029d6da23a0f2aa125c1bc99c9bfedac443e1f4` |
 | `finfolk-next` | Main production app, API and ocean data | GitHub `hoebat/finfolk-next`; HEAD observed `d879835e9493564c95b617187c84ee2478abecdd`; unrelated local ocean work is present |
 | `finfolk-atelier` | Local design studies and current catalogue snapshot | GitHub `hoebat/finfolk-app`; branch `handoff/atelier-goloka-2026-11-07`; HEAD `1ca2f678a0e10d26818fc2a939a9861c9b28a2ab` |
 
@@ -27,6 +27,8 @@ Read `finfolk-next/AGENTS.md` before modifying that app. Backend operation decla
 Do not use historical Atelier production deployment commands or its stale CNAME. Atelier is separate from the current production application.
 
 ## Production deployment
+
+The source repository is https://github.com/hoebat/finfolk-datasets. `origin` points to GitHub, and `main` tracks `origin/main`. The previous managed remote is retained as `sites`. Push source changes to GitHub; publish through the Sites workflow separately. A GitHub push alone does not deploy the website.
 
 The dataset service is hosted with the Sites plugin as a Cloudflare Worker ES module. It is public. Main FinFolk remains on its existing Netlify frontend and Cloudflare API infrastructure.
 

@@ -1,5 +1,7 @@
 # FinFolk datasets
 
+Source repository: https://github.com/hoebat/finfolk-datasets (`origin/main`). The `sites` remote retains the Sites-managed publishing repository; GitHub pushes alone do not deploy the website.
+
 Production catalogue for datasets.finfolk.com.au, organised by state and territory. This service publishes reviewed records and a versioned read-only JSON API. Admin editing is not enabled: the Atelier prototype retains its local proposals until a Git-backed administration workflow is implemented.
 
 ## Data ownership
