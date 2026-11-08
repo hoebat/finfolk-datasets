@@ -34,3 +34,5 @@ Then visit `http://127.0.0.1:8786` locally. Choose another local forwarding port
 After pulling later changes, run `npm run setup` again if `data-release.json` changes. Run `npm run build` and `npm test` for ordinary code changes.
 
 Production remains on Sites at https://datasets.finfolk.com.au until the Netlify migration acceptance gates in `MIGRATION.md` pass. Pushing GitHub source or running setup does not deploy it. Read `HANDOFF.md` and the Sites skill before publishing. Source data remains authoritative in Git LFS; checked-out caches and deployment bundles are reproducible copies.
+
+Deployment is owned by GitHub Actions after CLI acceptance and migration cutover. Do not enable Netlify Git builds. Only validated main revisions receive the deployment credential; the production domain remains on Sites until the migration gates pass.

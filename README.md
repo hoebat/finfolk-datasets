@@ -35,3 +35,9 @@ Administration returns unavailable until both auth and GitHub App configuration 
 The current catalogue has 32 records and 17 published products. It is not the full production map's 82-source vector manifest. Main-map integration, bulk file uploads and numeric sampling remain separate work.
 
 Historical implementation and deployment context: [HANDOFF.md](HANDOFF.md). Remote development: [GOLOKA.md](GOLOKA.md).
+
+## Deployment ownership
+
+GitHub Actions owns deployment: PRs validate without deployment credentials; validated `main` pushes and manual runs on `main` deploy through pinned Netlify CLI 27.16.2 to site `2994a09f-11bc-40e1-8a3a-d3e3a91455ff`. Configure `NETLIFY_AUTH_TOKEN` in the GitHub `production` environment. `NETLIFY_SITE_ID` may be set there but must match that project. Netlify Git builds and branch deploys stay disabled. Runtime auth/GitHub App secrets stay in Netlify.
+
+Production activation remains gated on the CLI smoke test and migration acceptance. Do not merge the migration to enable automated deployments before those gates pass. CLI deployments currently do not support Netlify Next.js skew protection; deployment verification checks the actual release commit instead.
