@@ -1,9 +1,9 @@
-import { readFileSync,writeFileSync,mkdirSync } from 'node:fs';
+import { readFileSync,writeFileSync,mkdirSync,existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 const release=JSON.parse(readFileSync('data-release.json','utf8'));
-const checkout=resolve(process.argv[2]||'../finfolk-atelier');
+const checkout=resolve(process.argv[2]||(existsSync('.cache/catalogue-source/.git')?'.cache/catalogue-source':'../finfolk-atelier'));
 const pointer=execFileSync('git',['-C',checkout,'show',release.commit+':'+release.path],{encoding:'utf8'});
 if(!pointer.startsWith('version https://git-lfs.github.com/spec/v1\n')||!pointer.includes('oid sha256:'+release.sha256+'\n'))throw Error('Pinned source is not the expected Git LFS object');
 const raw=readFileSync(resolve(checkout,release.path));

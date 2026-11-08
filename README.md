@@ -8,6 +8,17 @@ Production catalogue for datasets.finfolk.com.au, organised by state and territo
 
 Original ocean downloads remain in the existing FinFolk Git LFS repository. The catalogue snapshot is also an LFS object in `hoebat/finfolk-app`. `data-release.json` pins its repository, commit, path and SHA-256. Builds verify both the committed LFS pointer and the materialized object; pointer text cannot be published as JSON. No database or object store becomes authoritative. Deployment bundles contain materialized copies, not replacement originals. Published product URLs currently retain their existing FinFolk delivery locations.
 
+## Quick setup and Goloka
+
+Requires Node 22+, Git and Git LFS. After cloning this repository, run:
+
+```sh
+npm run setup
+npm run dev
+```
+
+Setup fetches only the pinned catalogue metadata and one bounded Git LFS object into ignored `.cache/catalogue-source`, verifies its checksum, builds the service and runs the checks. It does not clone an Atelier working tree or download bulk survey archives. Subsequent `npm run build` uses this cache. See [GOLOKA.md](GOLOKA.md) for the remote checkout and access instructions.
+
 ## Build and release
 
 Clone `https://github.com/hoebat/finfolk-app` beside this checkout as `finfolk-atelier`, check out the commit in `data-release.json`, and run `git lfs pull --include=design-board/assets/datasets/catalogue.json`. Then run `npm run build` and `npm test`. Alternatively pass an explicit data checkout to `node scripts/build.mjs /absolute/data/checkout`. Node 22+; no runtime dependencies.

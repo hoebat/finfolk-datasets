@@ -1,1 +1,14 @@
-{"name":"finfolk-datasets","private":true,"type":"module","scripts":{"build":"node scripts/build.mjs","test":"node --test tests/*.test.mjs","dev":"node scripts/preview.mjs"}}
+{
+  "name": "finfolk-datasets",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "dev": "node scripts/preview.mjs",
+    "setup": "node scripts/bootstrap.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

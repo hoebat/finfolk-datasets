@@ -53,7 +53,7 @@ Only documentation is being added for this handoff; no new site release is requi
 
 ## Implementation and verification
 
-The service has no installed runtime dependencies and uses Node 22+ for local build/checks.
+The service has no installed runtime dependencies and uses Node 22+ for local build/checks. `npm run setup` now fetches only the pinned catalogue LFS object into `.cache/catalogue-source`, then builds and tests. See `GOLOKA.md` for the remote setup at `zcaudate@goloka.tail15d041.ts.net:/Users/zcaudate/Development/greenways/finfolk-datasets`.
 
 ```bash
 cd /Users/chris/Development/greenways/finfolk-datasets
@@ -91,7 +91,7 @@ The authoritative catalogue snapshot currently lives in Atelier, in Git LFS:
 
 The pointer and LFS object were committed and pushed to the handoff branch. The snapshot contains 32 records. Production exposes 17 published records: 16 contour products and one national site-reference record. Acquisition/review records and Atelier-only landforms are not public releases. The snapshot is dated 7 November 2026 and is not a live download queue.
 
-Builds read the adjacent `../finfolk-atelier` checkout by default, or an explicit argument to `node scripts/build.mjs /absolute/data/checkout`. They require the pinned Git object and matching materialized file. On another machine, check out the pinned revision and fetch only the required LFS file when possible; avoid accidentally downloading all multi-GB survey originals.
+Builds prefer the ignored `.cache/catalogue-source` created by `npm run setup`, then fall back to the adjacent `../finfolk-atelier` checkout, or accept an explicit argument to `node scripts/build.mjs /absolute/data/checkout`. They require the pinned Git object and matching materialized file. On another machine, check out the pinned revision and fetch only the required LFS file when possible; avoid accidentally downloading all multi-GB survey originals.
 
 Original ocean survey data remains in finfolk-next's existing LFS paths. Current public product URLs still point to `https://finfolk.com.au/data/contours/*.geojson`; this release has not relocated those payloads to the dataset hostname. The new service is a catalogue and metadata API, not yet an independent host for all map assets.
 
