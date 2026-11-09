@@ -30,3 +30,18 @@ Pinned CLI: 27.16.2. The Netlify OpenNext build and function/edge packaging pass
 Netlify CLI 27.16.2 successfully built and packaged the Next.js app on Goloka with `netlify build --offline --context deploy-preview`. Actual upload/remote HTTP verification has not completed: draft remote-build deployment was rejected because this project intentionally has no Netlify Git connection; local clean dependency installation failed with npm `EIDLETIMEOUT`, and transferring the packaged output from Goloka failed with SSH timeouts (IPv4 and IPQoS fallback also tried). No deployment success is claimed. Keep this PR in draft and main deployment inactive until the local CLI upload and `scripts/verify-deployment.mjs` pass.
 
 The workflow is prepared with PR-only validation, a main-only production deployment job, serialized deployments, stale-revision skipping, a fixed site-ID guard and deployed commit/checksum verification. It requires `NETLIFY_AUTH_TOKEN` in GitHub's production environment. No GitHub deployment secret was provisioned by the agent. Production DNS is unchanged.
+
+
+## Latest verified deployment 10 November 2026
+
+Reused finfolk-next's existing Netlify account login, manifest-based CLI deploy engine and HTTP/1.1 upload helper, targeting only dataset site `2994a09f-11bc-40e1-8a3a-d3e3a91455ff`. The portable manifest paths were rebased for the local workspace before uploading the already-packaged SSR ZIP. A first standard CLI attempt rebundled relocated files and produced a broken draft; that failed draft is not a release candidate.
+
+Verified replacement draft: https://6af22da635f62de0356fd7eb--finfolk-datasets.netlify.app
+
+- Deploy ID: `6af22da635f62de0356fd7eb`, ready.
+- Packaged source commit: `7b277387475bd88081eabcd2248c6f23be7d0c40`.
+- Catalogue SHA-256: `439b75a180c976bb52a725355c6c3c6d5fc4cf7145ac9dfa5f56eb9604622fb3`.
+- `scripts/verify-deployment.mjs` passed against this URL, including 17 published records, correct provenance, static/theme assets, CORS, HEAD/OPTIONS, write rejection and fail-closed admin access.
+- Workflow settings now follow finfolk-next's checkout/setup-node v6, Node 22, offline Netlify adapter build and packaged-output verification. Do not copy its main-app API rewrites or site ID.
+
+This supersedes the earlier upload-blocked status above. Normal production DNS still serves Sites. GitHub Actions needs its production deployment token; runtime authentication/GitHub App acceptance and the private-repository requirement remain outstanding. The main FinFolk CI only builds and tests; its dummy skew-protection token is not a deployment credential.

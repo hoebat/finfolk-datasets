@@ -41,3 +41,5 @@ Historical implementation and deployment context: [HANDOFF.md](HANDOFF.md). Remo
 GitHub Actions owns deployment: PRs validate without deployment credentials; validated `main` pushes and manual runs on `main` deploy through pinned Netlify CLI 27.16.2 to site `2994a09f-11bc-40e1-8a3a-d3e3a91455ff`. Configure `NETLIFY_AUTH_TOKEN` in the GitHub `production` environment. `NETLIFY_SITE_ID` may be set there but must match that project. Netlify Git builds and branch deploys stay disabled. Runtime auth/GitHub App secrets stay in Netlify.
 
 Production activation remains gated on the CLI smoke test and migration acceptance. Do not merge the migration to enable automated deployments before those gates pass. CLI deployments currently do not support Netlify Next.js skew protection; deployment verification checks the actual release commit instead.
+
+The CI toolchain follows finfolk-next: checkout/setup-node v6, Node 22, an offline Netlify adapter build, and packaged-output checks. This project retains its own site ID, npm build command and dataset API routes; main-app Java/Clojure/Python build steps and FINFOLK_API_ORIGIN rewrites are not applicable here.

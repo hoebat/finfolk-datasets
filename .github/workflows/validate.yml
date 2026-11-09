@@ -10,15 +10,19 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           lfs: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build Next.js with the Netlify adapter
+        run: npx --no-install netlify build --offline --context deploy-preview
+        env:
+          NETLIFY_TELEMETRY_DISABLED: '1'
+      - run: node scripts/check-netlify-output.mjs
       - run: npm test
   deploy:
     needs: validate
@@ -33,10 +37,10 @@ jobs:
       NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID || '2994a09f-11bc-40e1-8a3a-d3e3a91455ff' }}
       COMMIT_REF: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           lfs: true
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
