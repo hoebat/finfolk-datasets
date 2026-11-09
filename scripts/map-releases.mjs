@@ -14,7 +14,9 @@ export function loadMapReleases({prepare=false}={}) {
  }
  return descriptors.map(release=>{
   if(release.repository!=='https://github.com/hoebat/finfolk-next'||!/^[a-f0-9]{40}$/.test(release.commit)||!/^[a-f0-9]{64}$/.test(release.sha256)||!/^datasets\/runtime\/releases\/[a-f0-9]{64}\/manifest\.json$/.test(release.path))throw Error('Invalid pinned map release');
-  if(prepare)git(['-C',checkout,'fetch','--filter=blob:none','--depth=1','origin',release.commit]);
+  // Refetch bounded metadata in one pass, rather than triggering one lazy
+  // network request per pointer in an existing partial clone.
+  if(prepare)git(['-C',checkout,'fetch','--refetch','--filter=blob:limit=1024','--depth=1','origin',release.commit]);
   const raw=git(['-C',checkout,'show',release.commit+':'+release.path]);
   if(createHash('sha256').update(raw).digest('hex')!==release.sha256)throw Error('Map manifest checksum mismatch');
   const manifest=JSON.parse(raw);
@@ -22,6 +24,7 @@ export function loadMapReleases({prepare=false}={}) {
   const entries=Object.entries(manifest.files);
   for(const [name,file]of entries)if(!/^(data\/[a-zA-Z0-9_./-]+|beaches\.json|guides\.json|social\.json)$/.test(name)||name.split('/').some(p=>!p||p==='.'||p==='..')||!/^[a-f0-9]{64}$/.test(file.hash)||!Number.isSafeInteger(file.bytes)||file.bytes<0)throw Error('Invalid map file descriptor');
   for(const [name,file]of entries){const s=file.storage;if(!s||s.path!==(s.encoding==='gzip'?name+'.gz':name)||!['gzip',null].includes(s.encoding)||!/^[a-f0-9]{64}$/.test(s.hash)||!Number.isSafeInteger(s.bytes)||s.bytes<0)throw Error('Invalid map storage descriptor');}
+  for(const [key,name]of Object.entries(manifest.tileArchives||{}))if(!/^[-a-zA-Z0-9_]+\/\d+$/.test(key)||!Object.hasOwn(manifest.files,name)||manifest.files[name].bytes>24*1024**2)throw Error('Invalid tile archive descriptor');
   const input=entries.map(([,file])=>release.commit+':'+release.path.replace(/manifest\.json$/,'files/')+file.storage.path).join('\n')+'\n';
   const output=execFileSync('git',['-C',checkout,'cat-file','--batch'],{input,maxBuffer:32*1024*1024});
   let offset=0;

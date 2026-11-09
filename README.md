@@ -39,6 +39,13 @@ Public API supports cross-origin GET/HEAD from finfolk.com.au. Writes return 405
 
 `map-releases.json` pins each map manifest to a source commit in `hoebat/finfolk-next`. Setup fetches metadata and verifies every Git LFS pointer against its stored-byte hash and size. Runtime responses stream those immutable LFS objects; JSON/GeoJSON use HTTP gzip, while numeric `.f32.gz` chunks retain their browser-decoded compression. `data/downloads.json` contains hashes of decoded browser bytes. Preserve old descriptors and source commits so saved regions and application rollback keep working. See `finfolk-next/docs/DATASET_RELEASES.md` for building and registering a new release.
 
+Explore's PBF vector tiles are packed by source and zoom into reversible Git LFS
+archives. The service checks archive and tile hashes and serves exact tile bytes
+through the same immutable release URLs. A bounded cache deduplicates concurrent
+archive reads; its reset fences in-flight reads from repopulating cleared state.
+Run `node scripts/verify-map-release.mjs` after publication to verify the live
+compression boundary, CORS, catalog, survey contours and vector tile checksums.
+
 ## FinFolk design system
 
 The catalogue keeps its dataset-specific navigation: Overview, All datasets, and state collections in a desktop sidebar and horizontally scrolling menus on mobile. FinFolk typography, identity and theme colours are retained. Theme definitions and SVG identity are copied from `hoebat/finfolk-next` commit `d879835e9493564c95b617187c84ee2478abecdd` (`src/appearance.js`, `src/finfolk-{wordmark,mark,icon}.svg` in the web-main package). Preserve their provenance when refreshing them. The four themes use the same `finfolk-theme` preference key; browser storage remains separate for each hostname.
