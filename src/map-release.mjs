@@ -29,5 +29,6 @@ export async function mapResponse(request, releases, fetcher = fetch) {
  headers['Content-Length']=String(stored.bytes);
  if(stored.encoding==='gzip')headers['Content-Encoding']='gzip';
  // Stream large contours; DatasetCache checks SHA-256 before persisting bytes.
- return new Response(request.method==='HEAD'?null:upstream.body,{status:200,headers});
+ // Workers otherwise gzip this already-compressed stream a second time.
+ return new Response(request.method==='HEAD'?null:upstream.body,{status:200,headers,encodeBody:'manual'});
 }
