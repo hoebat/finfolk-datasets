@@ -1,0 +1,14 @@
+import {validateCatalogue} from '../lib/validation.ts';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const release=JSON.parse(readFileSync('data-release.json','utf8')),raw=readFileSync(release.path);
+if(createHash('sha256').update(raw).digest('hex')!==release.sha256)throw Error('Catalogue checksum mismatch; materialize Git LFS data before building.');
+const pointer=execFileSync('git',['show','HEAD:'+release.path],{encoding:'utf8'});if(!pointer.startsWith('version https://git-lfs.github.com/spec/v1\n')||!pointer.includes('oid sha256:'+release.sha256+'\n'))throw Error('Committed catalogue must be a matching Git LFS pointer');
+const source=JSON.parse(raw);if(!Array.isArray(source.datasets)||new Set(source.datasets.map(r=>r.id)).size!==source.datasets.length)throw Error('Invalid catalogue identifiers');
+const report=validateCatalogue(source);if(report.errors.length)throw Error(report.errors.join('; '));
+const commit=process.env.COMMIT_REF||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const fields=['id','name','family','states','shared','regions','source','url','licence','resolution','surveyDate','datum','acquisition','validation','publication','quality','blocker','next','bytes','bounds','evidence'];
+const datasets=source.datasets.filter(r=>r.publication==='published'&&!r.archived).map(r=>({...Object.fromEntries(fields.filter(k=>k in r).map(k=>[k,r[k]])),assets:r.assets.filter(a=>a.status==='published'),pending:[]}));
+mkdirSync('.generated',{recursive:true});writeFileSync('.generated/catalogue.json',JSON.stringify({schemaVersion:1,snapshotAt:source.snapshotAt,states:source.states,regions:source.regions,datasets,release:{repository:release.repository,path:release.path,sha256:release.sha256,commit},notes:'Versioned catalogue snapshot. Contours are display layers, not numeric depth grids.'}));
+console.log('Prepared '+datasets.length+' published records.');

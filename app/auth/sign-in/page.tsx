@@ -1,0 +1,5 @@
+'use client';
+import {createAuthClient} from '@neondatabase/auth/next';
+import {useState} from 'react';
+const auth=createAuthClient();
+export default function SignIn(){const [message,setMessage]=useState('');return <main><h1>Sign in to FinFolk</h1><form onSubmit={async e=>{e.preventDefault();const fields=new FormData(e.currentTarget);const result=await auth.signIn.email({email:String(fields.get('email')),password:String(fields.get('password'))});if(result.error)setMessage(result.error.message||'Could not sign in');else location.assign('/admin')}}><label>Email<input type="email" name="email" required/></label><label>Password<input type="password" name="password" required/></label><button>Sign in</button><p role="status">{message}</p></form><button onClick={async()=>{const result=await auth.signIn.social({provider:'google',callbackURL:'/admin'});if(result.error)setMessage(result.error.message||'Google sign-in unavailable')}}>Continue with Google</button><a href="/">Back to catalogue</a></main>}

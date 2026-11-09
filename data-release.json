@@ -1,6 +1,11 @@
 {
-  "repository": "https://github.com/hoebat/finfolk-app",
-  "commit": "1ca2f678a0e10d26818fc2a939a9861c9b28a2ab",
-  "path": "design-board/assets/datasets/catalogue.json",
-  "sha256": "439b75a180c976bb52a725355c6c3c6d5fc4cf7145ac9dfa5f56eb9604622fb3"
+  "repository": "https://github.com/hoebat/finfolk-datasets",
+  "path": "data/catalogue.json",
+  "sha256": "439b75a180c976bb52a725355c6c3c6d5fc4cf7145ac9dfa5f56eb9604622fb3",
+  "origin": {
+    "repository": "https://github.com/hoebat/finfolk-app",
+    "commit": "1ca2f678a0e10d26818fc2a939a9861c9b28a2ab",
+    "path": "design-board/assets/datasets/catalogue.json",
+    "sha256": "439b75a180c976bb52a725355c6c3c6d5fc4cf7145ac9dfa5f56eb9604622fb3"
+  }
 }
