@@ -45,3 +45,7 @@ Verified replacement draft: https://6af22da635f62de0356fd7eb--finfolk-datasets.n
 - Workflow settings now follow finfolk-next's checkout/setup-node v6, Node 22, offline Netlify adapter build and packaged-output verification. Do not copy its main-app API rewrites or site ID.
 
 This supersedes the earlier upload-blocked status above. Normal production DNS still serves Sites. GitHub Actions needs its production deployment token; runtime authentication/GitHub App acceptance and the private-repository requirement remain outstanding. The main FinFolk CI only builds and tests; its dummy skew-protection token is not a deployment credential.
+
+## Reusing the existing deployment credential
+
+The 3 November FinFolk deployment session sourced `NETLIFY_AUTH_TOKEN` from the existing Mac Netlify CLI credential store at `~/Library/Preferences/netlify/config.json`. No separate token needs to be created or pasted into chat. `scripts/configure-github-deploy-secret.mjs` validates that credential against this dataset site, sends it to `gh secret set` through stdin, and verifies only secret metadata afterward. It preserves an existing GitHub production environment's settings. Run it after `gh auth login --hostname github.com`; GitHub CLI authentication is separate from SSH Git access and the connected GitHub app.
