@@ -31,8 +31,13 @@ To update data, commit and push the LFS object in the data repository, update th
 - `GET /v1/datasets/:id` — one published record and release provenance.
 - `GET /v1/manifest` — release commit, checksum and snapshot date.
 - `GET /health` — deployed source commit.
+- `GET /v1/map/current` — current immutable map release and its source commit.
+- `GET /v1/map/releases/:id/manifest.json` — file hashes, sizes and release coverage.
+- `GET /v1/map/releases/:id/:path` — allowlisted runtime map files from pinned Git LFS objects.
 
-Public API supports cross-origin GET/HEAD from finfolk.com.au. Writes return 405; `/admin` returns 404. No numeric depth sampling is claimed. The main production map has not been switched to this API.
+Public API supports cross-origin GET/HEAD from finfolk.com.au. Writes return 405; `/admin` returns 404. The application pins a complete map release rather than following a mutable catalog. The initial map release has 79 regions, 16 with contours, and no numeric rasters: acquisition integrity alone does not verify vertical datum and survey quality.
+
+`map-releases.json` pins each map manifest to a source commit in `hoebat/finfolk-next`. Setup fetches metadata and verifies every Git LFS pointer against its stored-byte hash and size. Runtime responses stream those immutable LFS objects; JSON/GeoJSON use HTTP gzip, while numeric `.f32.gz` chunks retain their browser-decoded compression. `data/downloads.json` contains hashes of decoded browser bytes. Preserve old descriptors and source commits so saved regions and application rollback keep working. See `finfolk-next/docs/DATASET_RELEASES.md` for building and registering a new release.
 
 ## FinFolk design system
 

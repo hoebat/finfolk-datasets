@@ -3,6 +3,7 @@ const headers={'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-orig
 const csp="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'self'";
 export default {async fetch(request){
 const url=new URL(request.url),path=url.pathname.replace(/\/$/,'')||'/',api=path.startsWith('/v1/')||path==='/health';
+if(path==='/v1/map'||path.startsWith('/v1/map/'))return mapResponse(request,mapReleases);
 const h={...headers,...(api?{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, HEAD, OPTIONS','Access-Control-Allow-Headers':'Accept, Content-Type'}:{})};
 const respond=(body,status=200,type='application/json; charset=utf-8')=>new Response(request.method==='HEAD'?null:body,{status,headers:{...h,'Content-Type':type}});
 const json=(body,status=200)=>respond(JSON.stringify(body),status);

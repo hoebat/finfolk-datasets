@@ -3,6 +3,7 @@ import {existsSync,mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {loadMapReleases} from './map-releases.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 process.chdir(root);
@@ -30,6 +31,7 @@ const raw=run(['-C',checkout,'lfs','smudge'],{input:pointer,encoding:null,env:{.
 if(raw.length!==size||createHash('sha256').update(raw).digest('hex')!==release.sha256)throw Error('Downloaded catalogue does not match the pinned size/checksum.');
 JSON.parse(raw.toString('utf8'));
 const target=resolve(checkout,release.path);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,raw);
+loadMapReleases({prepare:true});
 execFileSync(process.execPath,['scripts/build.mjs',checkout],{stdio:'inherit'});
 execFileSync(process.execPath,['--test','tests/service.test.mjs'],{stdio:'inherit'});
 console.log('Setup complete. Run npm run dev to preview at http://127.0.0.1:8786.');
