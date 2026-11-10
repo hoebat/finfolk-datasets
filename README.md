@@ -55,3 +55,12 @@ The catalogue keeps its dataset-specific navigation: Overview, All datasets, and
 The coastal extension publishes 709 native COG downloads across 25 source groups, including 512 Victorian 2.5 m COGs. Twenty groups add drawable native-grid reference-elevation contours alongside the existing 82 Explore sources. The remaining five groups have no drawable below-reference contours. All native source values, datum evidence, licences and SHA-256 hashes remain available through `/v1/coastal/coastal-c47b919957525ff9/catalog.json`. Source vertical references are not harmonized; these products do not enable numeric water-depth sampling.
 
 New vector archives may be sharded by source, zoom and x tile to stay below the existing 24 MiB decode bound. Legacy zoom archives and old immutable releases remain supported. The public catalogue includes acquisition products with their vertical-review status explicitly pending.
+## Reviewed numeric subset
+
+The newest map release adds the bounded Pope’s Eye 2018 survey subset: 6,665
+native cells referenced to AHD, with source metadata and gaps retained. Numeric
+values express metres below AHD, without tide adjustment. The release preserves
+all 102 contour sources and 709 public native COG downloads. Other VCDEM tiles
+remain unverified for numeric registration. The source repository retains the
+publisher metadata, crop rule and complete review evidence.
+
