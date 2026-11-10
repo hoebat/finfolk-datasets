@@ -19,7 +19,8 @@ for(const path of ['data/catalog.json','data/downloads.json','data/contours/port
 }
 if(Object.keys(manifest.tileArchives||{}).length){
  const [key,name]=Object.entries(manifest.tileArchives)[0],archive=await(await fetch(new URL(name,release.base))).json();
- const [position,tile]=Object.entries(archive.tiles)[0],response=await fetch(new URL('data/explore-contours/'+key+'/'+position+'.pbf',release.base));
+ const [source,z]=key.split('/');
+ const [position,tile]=Object.entries(archive.tiles)[0],response=await fetch(new URL('data/explore-contours/'+source+'/'+z+'/'+position+'.pbf',release.base));
  if(!response.ok)throw Error('Vector tile unavailable');
  const bytes=Buffer.from(await response.arrayBuffer());
  if(createHash('sha256').update(bytes).digest('hex')!==tile.hash||bytes.length!==tile.bytes)throw Error('Vector tile checksum mismatch');
