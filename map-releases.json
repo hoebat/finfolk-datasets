@@ -34,5 +34,11 @@
     "commit": "a8999d27add37d996c1d237c65257c3b2f970e7c",
     "path": "datasets/runtime/releases/2516bb06d60b2aa1c996eab623880173dedd8bd5616f3f958fb9f7ae2df893dc/manifest.json",
     "sha256": "8f82385cb9e8fbfbc092106113560f5192cfb61460434b41dc1f6e841fafdf7a"
+  },
+  {
+    "repository": "https://github.com/hoebat/finfolk-next",
+    "commit": "d4b781be3c420274132512e4b674ea0d7677ecad",
+    "path": "datasets/runtime/releases/5c29086ea27acfc85b0de8c0e2ed77d44f8f62d5c3e3ea7c068fe0d28948db46/manifest.json",
+    "sha256": "6a38ac4516162bae9df201280088d77c83a5803e038003b68eb8c418660f5f26"
   }
 ]
