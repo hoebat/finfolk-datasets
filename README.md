@@ -49,3 +49,9 @@ compression boundary, CORS, catalog, survey contours and vector tile checksums.
 ## FinFolk design system
 
 The catalogue keeps its dataset-specific navigation: Overview, All datasets, and state collections in a desktop sidebar and horizontally scrolling menus on mobile. FinFolk typography, identity and theme colours are retained. Theme definitions and SVG identity are copied from `hoebat/finfolk-next` commit `d879835e9493564c95b617187c84ee2478abecdd` (`src/appearance.js`, `src/finfolk-{wordmark,mark,icon}.svg` in the web-main package). Preserve their provenance when refreshing them. The four themes use the same `finfolk-theme` preference key; browser storage remains separate for each hostname.
+
+## Coastal archive release
+
+The coastal extension publishes 709 native COG downloads across 25 source groups, including 512 Victorian 2.5 m COGs. Twenty groups add drawable native-grid reference-elevation contours alongside the existing 82 Explore sources. The remaining five groups have no drawable below-reference contours. All native source values, datum evidence, licences and SHA-256 hashes remain available through `/v1/coastal/coastal-c47b919957525ff9/catalog.json`. Source vertical references are not harmonized; these products do not enable numeric water-depth sampling.
+
+New vector archives may be sharded by source, zoom and x tile to stay below the existing 24 MiB decode bound. Legacy zoom archives and old immutable releases remain supported. The public catalogue includes acquisition products with their vertical-review status explicitly pending.

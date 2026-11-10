@@ -49,6 +49,22 @@ function tileFixture(){
  list[0].manifest.files[name]={hash:sha(body),bytes:body.length,storage:{path:name+'.gz',hash:sha(packed),bytes:packed.length,encoding:'gzip'}};
  return {list,packed,bytes,path:`releases/${id}/data/explore-contours/pilot/10/12/14.pbf`};
 }
+test('coastal downloads preserve native bytes and only resolve registered releases',async()=>{
+ const list=structuredClone(releases),coastal='coastal-0123456789abcdef',name='data/coastal/'+coastal+'/rasters/source.tif';
+ list[0].manifest.coastalRelease=coastal;list[0].manifest.files[name]={hash,bytes:2,storage:{path:name,hash,bytes:2,encoding:null}};
+ const url='https://datasets.finfolk.com.au/v1/coastal/'+coastal+'/rasters/source.tif';let calls=0;
+ const r=await mapResponse(new Request(url),list,async upstream=>{calls++;assert(upstream.endsWith('/files/'+name));return new Response(new Uint8Array([73,73]),{headers:{'Content-Length':'2'}});});
+ assert.equal(r.status,200);assert.deepEqual([...new Uint8Array(await r.arrayBuffer())],[73,73]);assert.match(r.headers.get('Content-Type'),/image\/tiff/);assert.equal(r.headers.get('Content-Encoding'),null);
+ assert.equal((await mapResponse(new Request(url.replace(coastal,'coastal-ffffffffffffffff')),list)).status,404);
+ assert.equal((await mapResponse(new Request(url.replace('source.tif','missing.tif')),list)).status,404);assert.equal(calls,1);
+});
+test('x-sharded tiles take precedence while legacy zoom archives remain supported',async()=>{
+ resetMapArchiveCache();
+ try{const {list,packed,bytes,path}=tileFixture();list[0].manifest.tileArchives['pilot/10/12']=list[0].manifest.tileArchives['pilot/10'];delete list[0].manifest.tileArchives['pilot/10'];
+ const r=await mapResponse(request(path),list,async()=>new Response(packed));assert.equal(r.status,200);assert.deepEqual(Buffer.from(await r.arrayBuffer()),bytes);
+ assert.equal((await mapResponse(request(path.replace('/12/14.pbf','/13/14.pbf')),list)).status,404);
+ }finally{resetMapArchiveCache();}
+});
 test('tile archives reconstruct exact PBF bytes, deduplicate reads and reset idempotently',async()=>{
  resetMapArchiveCache();const {list,packed,bytes,path}=tileFixture();let calls=0;
  const fetcher=async()=>{calls++;return new Response(packed);};

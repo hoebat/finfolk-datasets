@@ -24,7 +24,7 @@ export function loadMapReleases({prepare=false}={}) {
   const entries=Object.entries(manifest.files);
   for(const [name,file]of entries)if(!/^(data\/[a-zA-Z0-9_./-]+|beaches\.json|guides\.json|social\.json)$/.test(name)||name.split('/').some(p=>!p||p==='.'||p==='..')||!/^[a-f0-9]{64}$/.test(file.hash)||!Number.isSafeInteger(file.bytes)||file.bytes<0)throw Error('Invalid map file descriptor');
   for(const [name,file]of entries){const s=file.storage;if(!s||s.path!==(s.encoding==='gzip'?name+'.gz':name)||!['gzip',null].includes(s.encoding)||!/^[a-f0-9]{64}$/.test(s.hash)||!Number.isSafeInteger(s.bytes)||s.bytes<0)throw Error('Invalid map storage descriptor');}
-  for(const [key,name]of Object.entries(manifest.tileArchives||{}))if(!/^[-a-zA-Z0-9_]+\/\d+$/.test(key)||!Object.hasOwn(manifest.files,name)||manifest.files[name].bytes>24*1024**2)throw Error('Invalid tile archive descriptor');
+  for(const [key,name]of Object.entries(manifest.tileArchives||{}))if(!/^[-a-zA-Z0-9_]+\/\d+(?:\/\d+)?$/.test(key)||!Object.hasOwn(manifest.files,name)||manifest.files[name].bytes>24*1024**2)throw Error('Invalid tile archive descriptor');
   const input=entries.map(([,file])=>release.commit+':'+release.path.replace(/manifest\.json$/,'files/')+file.storage.path).join('\n')+'\n';
   const output=execFileSync('git',['-C',checkout,'cat-file','--batch'],{input,maxBuffer:32*1024*1024});
   let offset=0;

@@ -14,6 +14,17 @@ const datasets=source.datasets.filter(r=>r.publication==='published').map(r=>({.
 const catalogue={schemaVersion:1,snapshotAt:source.snapshotAt,states:source.states,regions:source.regions,datasets,release,notes:'Versioned catalogue snapshot. Product files retain their published delivery URLs. Contours are display layers, not numeric depth grids.'};
 const files=Object.fromEntries(['index.html','styles.css','app.js','appearance.js','finfolk-wordmark.svg','finfolk-mark.svg','finfolk-icon.svg'].map(n=>['/'+(n==='index.html'?'':n),readFileSync('src/'+n,'utf8')]));
 const maps=loadMapReleases();
+// Native source downloads are acquisition products, not verified depth samples.
+const latest=maps.at(-1);
+for(const s of latest?.manifest.coastalSources||[]){
+ const base='https://datasets.finfolk.com.au/v1/coastal/'+latest.manifest.coastalRelease+'/';
+ catalogue.datasets.push({id:s.id,name:s.title,family:'bathymetry',source:s.attribution,states:s.states,regions:[],shared:false,
+  surveyDate:s.survey_date,resolution:s.resolution_m,datum:s.source_vertical_reference||s.datum,licence:s.licence,
+  quality:s.limitation,validation:'Acquisition verified; vertical review pending',publication:'published',url:s.upstream_url,
+  blocker:s.limitation,evidence:'Native coastal COGs retain original signed values, source references and SHA-256 hashes.',
+  assets:[{name:'Native COG downloads and provenance',status:'published',url:base+'sources/'+s.id+'.html'},
+          {name:'Coastal coverage and source catalogue',status:'published',url:base+'catalog.json'}],pending:[]});
+}
 const mapRuntime=readFileSync('src/map-release.mjs','utf8').replace(/^export /gm,'');
 const server=readFileSync('src/worker.mjs','utf8').replace('/* RELEASE_DATA */',`${mapRuntime}\nconst mapReleases=${JSON.stringify(maps)};\nconst catalogue=${JSON.stringify(catalogue)};\nconst files=${JSON.stringify(files)};`);
 mkdirSync('dist/server',{recursive:true});writeFileSync('dist/server/index.js',server);
