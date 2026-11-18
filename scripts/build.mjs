@@ -25,7 +25,7 @@ for(const s of latest?.manifest.coastalSources||[]){
   assets:[{name:'Native COG downloads and provenance',status:'published',url:base+'sources/'+s.id+'.html'},
           {name:'Coastal coverage and source catalogue',status:'published',url:base+'catalog.json'}],pending:[]});
 }
-const mapRuntime=readFileSync('src/map-release.mjs','utf8').replace(/^export /gm,'');
-const server=readFileSync('src/worker.mjs','utf8').replace('/* RELEASE_DATA */',`${mapRuntime}\nconst mapReleases=${JSON.stringify(maps)};\nconst catalogue=${JSON.stringify(catalogue)};\nconst files=${JSON.stringify(files)};`);
+const mapRuntime=['src/map-release.mjs','src/map-providers.mjs'].map(path=>readFileSync(path,'utf8').replace(/^export /gm,'')).join('\n');
+const server=readFileSync('src/worker.mjs','utf8').replace('/* RELEASE_DATA */',()=>`${mapRuntime}\nconst mapReleases=${JSON.stringify(maps)};\nconst catalogue=${JSON.stringify(catalogue)};\nconst files=${JSON.stringify(files)};`);
 mkdirSync('dist/server',{recursive:true});writeFileSync('dist/server/index.js',server);
 console.log(JSON.stringify({datasets:datasets.length,sourceCommit:release.commit,lfsSha256:release.sha256,workerBytes:Buffer.byteLength(server)}));

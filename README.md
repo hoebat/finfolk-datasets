@@ -64,3 +64,20 @@ all 102 contour sources and 709 public native COG downloads. Other VCDEM tiles
 remain unverified for numeric registration. The source repository retains the
 publisher metadata, crop rule and complete review evidence.
 
+
+## Map display providers
+
+All map data is delivered from this service, including the public display
+providers at `/v1/map/providers/`: `openfreemap` (Liberty style, vector/raster
+tiles, glyphs and sprites), `terrain` (Terrarium tiles, z0–8), `osm` (raster
+basemap, z0–19), and `nsw`/`vic` (bounded bathymetry image exports and legends).
+Styles and TileJSON rewrite nested map-resource URLs to this origin. Attribution
+links remain the publishers' URLs. These are display gateways, not additional
+reviewed depth datasets or replacements for authoritative Git LFS survey data.
+
+Only fixed providers and known resource shapes are accepted. Redirects, arbitrary
+upstream URLs, oversized image exports and writes are rejected. Requests retain a
+stable service identity and web Referer; responses preserve provider caching and
+attribution. No bulk or offline OSM tile download endpoint is provided. Source
+requirements: https://operations.osmfoundation.org/policies/tiles/ and
+https://openfreemap.org/quick_start/ .
